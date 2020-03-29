@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>计数器</title>
+        <link rel="stylesheet" href="./css/index.css"  />
+    </head>
+
+    <body>
+        <div id="app">
+            <!--计数器功能区域-->
+            <div class="input-num">
+                <button @click="sub">-</button>
+                <span>{{ num }}</span>
+                <button @click="add">+</button>
+            </div>
+            <!--logo-->
+            <img src="http://www.itheima.com/images/logo.png" alt="" />
+        </div>
+         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+            var vue = new Vue({
+                el:"#app",
+                data:{
+                    num:0,
+                    min:0,
+                    max:10
+                },
+                methods:{
+                    sub(){
+                        this.num --;
+                        if(this.num < this.min){
+                            this.num = this.min;
+                            alert("min is " + this.min);
+                        }
+                    },
+                    add(){
+                        this.num++;
+                        if(this.num > this.max){
+                            this.num = this.max;
+                            alert("max is " + this.max);
+                        }
+                    }
+                }
+            });
+            
+        </script>
+  <!-- 编码 -->
+    </body>
+</html>
