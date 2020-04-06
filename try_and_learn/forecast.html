@@ -1,69 +1,72 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>计数器</title>
+    <title>天知道</title>
     <link rel="stylesheet" href="./css/forecast.css">
 </head>
 
-<body style> 
-    
-        <header>
-            <h1>天知道</h1>
-            <span>
-                <input placeholder="上海"  v-model="inputValue" @keyup.enter="add"/>
-                <button >搜索</button>
-            </span>
-            <div>
-                <span>北京</span>
-                <span>上海</span>
-                <span>广州</span>
-                <span>深圳</span>
+<body style>
+    <div class="wrap" id="app">
+
+        <div class="search_form">
+            <div class="logo">
+                <img src="img/logo.png"></img>
             </div>
-        </header>
-        <section class="main" >
-            <ul>
-                <li>
-                    <span>
-                        <div>
-                            <div>小雨</div>
-                            <div>低温 8~10C</div>
-                            <div>29日星期天</div>
-                            <span class="seperator"> | </span>
-                        </div>
-                        
-                    </span>   
-                </li>
-            </ul>  
-        </section>
-        
-</body>
+            <div class="form_group">
+                <input class="input_txt" placeholder="上海" v-model="city" @keyup.enter="queryWeather" />
+                <button class="input_sub" @click="queryWeather">搜索</button>
+            </div>
 
- <!-- 开发环境版本，包含了有帮助的命令行警告 -->
- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script >
-    var app = new Vue({
-        el:"#todoapp",
-        data:{
-            list: ["吃饭","睡觉","打豆豆"],
-            inputValue:"好好学习，天天向上"
-        },
-        methods:{
-            add: function(){
-                this.list.push(this.inputValue);
+            <div class="hotkey" v-for=>
+                <a href="javascript:;" v-for="city in hotCities" @click="clickSearch(city)">{{city}} </a>
+            </div>
+        </div>
+
+        <ul class="weather_list">
+            <li v-for="(item,index) in forecastList" :key="item.date" :style="{transitionDelay:index*100+'ms'}">
+                <div class="info_type">{{item.type}}</div>
+                <div class="info_temp">{{item.low}} ~ {{item.high}}</div>
+                <div class="info_date">{{item.date}}</div>
+            </li>
+        </ul>
+    </div>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- 官网提供的 axios 在线地址 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                city: "武汉",
+                forecastList: [],
+                hotCities: ["北京", "上海", "广州", "深圳"]
             },
-            remove: function(index){
-                console.log(index);
-                this.list.splice(index-1); 
-            },
-            clear: function(){
-                this.list = [];
+            methods: {
+                queryWeather() {
+                    this.forecastList = [];
+                    axios.get(`http://wthrcdn.etouch.cn/weather_mini?city=${this.city}`)
+                        .then(res => {
+                            console.log(res);
+                            this.forecastList = res.data.data.forecast;
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                        .finally(() => { });
+                },
+                clickSearch(city) {
+                    this.city = city;
+                    this.queryWeather();
+                }
             }
-        }
-    })
+        });
 
-</script>
+    </script>
+</body>
 
 </html>
